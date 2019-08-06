@@ -10,7 +10,7 @@ import '@/styles/index.less'
 // index 是目录的索引文件  默认使用的索引文件 优先顺序为 index.js  index.vue  index.json
 import router from '@/router'
 
-import axios from 'axios'
+import axios from '@/api'
 Vue.prototype.$http = axios
 
 // 产品级别提示  不开启    在开发阶段 提示越详细越好 开发级别提示    上线阶段后选true 日志内容比较少 运行快

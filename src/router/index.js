@@ -7,6 +7,8 @@ import Welcome from '@/views/welcome'
 import Article from '@/views/article'
 import NotFound from '@/views/404'
 
+import store from '@/store'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -41,6 +43,12 @@ const router = new VueRouter({
       component: NotFound
     }
   ]
+})
+// 加上全局前置导航守卫,拦截未登陆的路由跳转
+router.beforeEach((to, from, next) => {
+  // 如果不是登陆页，而且没有用户信息 跳转到登录页。 否则若是登录页或者有用户信息 放行
+  if (to.path !== '/login' && !store.getUser().token) return next('/login')
+  next()
 })
 
 export default router
