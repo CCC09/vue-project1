@@ -14,7 +14,7 @@
                     <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款哦</el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width:100%" type="primary" @click="submitForm">登陆</el-button>
+                    <el-button style="width:100%" type="primary" @click="submitForm()">登陆</el-button>
                 </el-form-item>
             </el-form>
         </el-card>

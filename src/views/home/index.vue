@@ -43,17 +43,17 @@
     </el-aside>
     <el-container>
       <el-header>
-        <span class="el-icon-s-fold" @click="toggleMenu"></span>
+        <span class="el-icon-s-fold" @click="toggleMenu()"></span>
         <span>传智播客黑马</span>
-        <el-dropdown>
+        <el-dropdown @command="clickMenu">
           <span class="el-dropdown-link">
-            <img src="../../assets/images/avatar.jpg" alt />
-            用户ccc
+            <img :src="photo" alt />
+            {{name}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-toilet-paper">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-toilet-paper" command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -65,15 +65,36 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      name: '',
+      photo: ''
     }
+  },
+  created () {
+    const user = store.getUser()
+    // console.log(this)
+    this.name = user.name
+    this.photo = user.photo
   },
   methods: {
     toggleMenu () {
       this.isCollapse = !this.isCollapse
+    },
+    setting () {
+      this.$router.push('/setting')
+    },
+    logout () {
+      store.clearUser()
+      this.$router.push('/login')
+    },
+    // 若函数有默认传参 想接受这个参数  @command="clickMenu"调用时不加()
+    clickMenu (type) {
+      this[type]()
+      // console.log(type)  传进来的setting或logout是字符串所以用['']
     }
   }
 }
