@@ -15,14 +15,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道：">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择" clearable>
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="日期：">
           <el-date-picker
@@ -75,7 +68,7 @@
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" circle plain></el-button>
+            <el-button type="primary" icon="el-icon-edit" circle plain @click="edit(scope.row.id)"></el-button>
             <el-button type="danger" icon="el-icon-delete" circle plain @click="del(scope.row.id)"></el-button>
           </template>
         </el-table-column>
@@ -107,21 +100,21 @@ export default {
         page: 1,
         per_page: 20
       },
-      channelOptions: [],
+      // channelOptions: [],
       dateArr: [],
       articles: [],
       total: 0
     }
   },
-  watch: {
-    'reqParams.channel_id': function (newVal) {
-      if (newVal === '') {
-        this.reqParams.channel_id = null
-      }
-    }
-  },
+  // watch: {
+  //   'reqParams.channel_id': function (newVal) {
+  //     if (newVal === '') {
+  //       this.reqParams.channel_id = null
+  //     }
+  //   }
+  // },
   created () {
-    this.getChannelOptions()
+    // this.getChannelOptions()
     this.getArticles()
   },
   methods: {
@@ -135,6 +128,9 @@ export default {
         this.$message.success('删除成功啦！')
         this.getArticles()
       }).catch(() => {})
+    },
+    edit (id) {
+      this.$router.push('/publish?id=' + id)
     },
     changeDate (date) {
       if (date) {
@@ -153,12 +149,12 @@ export default {
       this.reqParams.page = 1
       this.getArticles()
     },
-    async getChannelOptions () {
-      const {
-        data: { data }
-      } = await this.$http.get('channels')
-      this.channelOptions = data.channels
-    },
+    // async getChannelOptions () {
+    //   const {
+    //     data: { data }
+    //   } = await this.$http.get('channels')
+    //   this.channelOptions = data.channels
+    // },
     async getArticles () {
       const {
         data: { data }
