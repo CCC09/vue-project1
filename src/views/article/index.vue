@@ -125,6 +125,17 @@ export default {
     this.getArticles()
   },
   methods: {
+    del (id) {
+      this.$confirm('呵呵，此操作将永久删除该文件, 是否继续?', '非常温馨的提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete(`articles/${id}`)
+        this.$message.success('删除成功啦！')
+        this.getArticles()
+      }).catch(() => {})
+    },
     changeDate (date) {
       if (date) {
         this.reqParams.begin_pubdate = date[0]
