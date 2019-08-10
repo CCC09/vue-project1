@@ -17,8 +17,8 @@
         <div class="img-item" v-for="item in images" :key="item.id">
           <img :src="item.url" alt />
           <div class="footer" v-show="!reqParams.collect">
-            <span class="el-icon-star-off" :class="{selected:item.is_collected}"></span>
-            <span class="el-icon-delete"></span>
+            <span class="el-icon-star-off" :class="{selected:item.is_collected}" @click="toggleCollect(item)"></span>
+            <span class="el-icon-delete" @click="deleteImage(item.id)"></span>
           </div>
         </div>
       </div>
@@ -74,6 +74,23 @@ export default {
     this.getImages()
   },
   methods: {
+    deleteImage (id) {
+      this.$confirm('嘿！此操作将永久删除该图片, 是否继续?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete('user/images/' + id)
+        this.$message.success('删除成功')
+        this.getImages()
+      }).catch(() => {
+      })
+    },
+    async toggleCollect (item) {
+      const { data: { data } } = await this.$http.put(`user/images/${item.id}`, { collect: !item.is_collected })
+      this.$message.success(data.collect ? '添加收藏成功' : '取消收藏成功')
+      item.is_collected = data.collect
+    },
     handleSuccess (res) {
       this.imageUrl = res.data.url
       this.$message.success('上传成功')
