@@ -2,7 +2,7 @@
   <div class="publish-container">
     <el-card>
       <div slot="header" class="clearfix">
-        <my-bread>发布文章</my-bread>
+        <my-bread>{{articleId?'修改':'发布'}}文章</my-bread>
       </div>
       <el-form label-width="100px">
         <el-form-item label="标题：">
@@ -30,9 +30,13 @@
         <el-form-item label="频道：">
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary">发布</el-button>
-          <el-button>存入草稿</el-button>
+        <el-form-item v-if="!articleId">
+          <el-button type="primary" @click="submit(false)">发布</el-button>
+          <el-button @click="submit(true)">存入草稿</el-button>
+        </el-form-item>
+        <el-form-item v-else>
+          <el-button type="success" @click="update(false)">修改</el-button>
+          <el-button @click="update(true)">存入草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -71,12 +75,49 @@ export default {
             ['image']
           ]
         }
+      },
+      articleId: null
+    }
+  },
+  watch: {
+    $route () {
+      if (!this.$route.query.id) {
+        this.articleId = null
+        this.articleForm = {
+          channel_id: null,
+          cover: {
+            type: 1,
+            images: []
+          },
+          title: null,
+          content: null
+        }
       }
     }
   },
+  created () {
+    this.articleId = this.$route.query.id
+    if (this.articleId) {
+      this.getArticle()
+    }
+  },
   methods: {
+    async getArticle () {
+      const { data: { data } } = await this.$http.get('articles/' + this.articleId)
+      this.articleForm = data
+    },
     changeImageRadio () {
       this.articleForm.cover.images = []
+    },
+    async submit (draft) {
+      await this.$http.post('articles?draft=' + draft, this.articleForm)
+      this.$message.success(draft ? '存入草稿成功' : '发布文章成功')
+      this.$router.push('/article')
+    },
+    async update (draft) {
+      await this.$http.put(`articles/${this.articleId}?draft=${draft}`, this.articleForm)
+      this.$message.success(draft ? '修改存入草稿成功' : '修改文章成功')
+      this.$router.push('/article')
     }
   }
 }
