@@ -28,3 +28,9 @@ body {
   height: 178px;
   display: block;
 }
+.publish-container .ql-toolbar.ql-snow {
+  padding: 0 8px;
+}
+.publish-container .ql-editor {
+  height: 300px;
+}

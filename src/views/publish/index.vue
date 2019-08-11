@@ -1,23 +1,30 @@
 <template>
-  <div class="container">
+  <div class="publish-container">
     <el-card>
       <div slot="header" class="clearfix">
         <my-bread>发布文章</my-bread>
       </div>
       <el-form label-width="100px">
         <el-form-item label="标题：">
-          <el-input></el-input>
+          <el-input v-model="articleForm.title" style="width:400px"></el-input>
         </el-form-item>
-        <el-form-item label="内容：">富的文本</el-form-item>
+        <el-form-item label="内容：">
+          <quill-editor v-model="articleForm.content" :options="editorOption"></quill-editor>
+        </el-form-item>
         <el-form-item label="封面：">
-          <el-radio-group v-model="articleForm.cover.type">
+          <el-radio-group v-model="articleForm.cover.type" @change="changeImageRadio()">
             <el-radio :label="1">单图</el-radio>
             <el-radio :label="3">三图</el-radio>
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
-          <div class="img-btn">
-              <img src="../../assets/images/avatar.jpg" alt="">
+          <div v-if="articleForm.cover.type===1">
+            <my-image v-model="articleForm.cover.images[0]"></my-image>
+          </div>
+          <div v-if="articleForm.cover.type===3">
+            <my-image v-model="articleForm.cover.images[0]"></my-image>
+            <my-image v-model="articleForm.cover.images[1]"></my-image>
+            <my-image v-model="articleForm.cover.images[2]"></my-image>
           </div>
         </el-form-item>
         <el-form-item label="频道：">
@@ -33,15 +40,43 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
+  components: {
+    quillEditor
+  },
   data () {
     return {
       articleForm: {
         channel_id: null,
         cover: {
-          type: 1
+          type: 1,
+          images: []
+        },
+        title: null,
+        content: null
+      },
+      editorOption: {
+        placeholder: '',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            ['image']
+          ]
         }
       }
+    }
+  },
+  methods: {
+    changeImageRadio () {
+      this.articleForm.cover.images = []
     }
   }
 }
