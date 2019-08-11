@@ -8,7 +8,7 @@
         <el-form-item label="标题：">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="内容：">富文本</el-form-item>
+        <el-form-item label="内容：">富的文本</el-form-item>
         <el-form-item label="封面：">
           <el-radio-group v-model="articleForm.cover.type">
             <el-radio :label="1">单图</el-radio>
