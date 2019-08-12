@@ -4,7 +4,9 @@ const KEY = 'hm-username'
 export default {
   // 设置、存储user对象数据
   setUser (user) {
-    window.sessionStorage.setItem(KEY, JSON.stringify(user))
+    const localUser = this.getUser()
+    const newUser = { ...localUser, ...user }
+    window.sessionStorage.setItem(KEY, JSON.stringify(newUser))
   },
   // 获取用户信息
   getUser () {

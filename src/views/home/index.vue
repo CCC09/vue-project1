@@ -66,6 +66,7 @@
 
 <script>
 import store from '@/store'
+import eventBus from '@/components/eventBus'
 export default {
   data () {
     return {
@@ -75,6 +76,12 @@ export default {
     }
   },
   created () {
+    eventBus.$on('updateUserName', (data) => {
+      this.name = data
+    })
+    eventBus.$on('updatePhoto', (data) => {
+      this.photo = data
+    })
     const user = store.getUser()
     // console.log(this)
     this.name = user.name
